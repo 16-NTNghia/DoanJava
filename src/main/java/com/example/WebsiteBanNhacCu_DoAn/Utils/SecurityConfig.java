@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -47,19 +48,20 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(@NotNull
                                                    HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/",
                                 "/oauth/**", "/register", "/error","/registerSubmit","/books")
                         .permitAll()
-                        .requestMatchers("/books/edit/**",
-                                "/books/add", "/books/delete","/Admin")
-                        .hasAnyAuthority("ADMIN")
-                        .requestMatchers("/books", "/cart", "/cart/**")
-                        .hasAnyAuthority("ADMIN", "USER", "GOOGLE")
-                        .requestMatchers("/api/**")
-                        .hasAnyAuthority("ADMIN", "USER", "GOOGLE")
-                        .anyRequest().authenticated()
+//                        .requestMatchers("/Admin")
+//                        .hasAnyAuthority("ADMIN")
+                        .requestMatchers( "/cart", "/cart/**","/products","/categories").permitAll()
+//                        .hasAnyAuthority("ADMIN", "USER", "GOOGLE")
+                        .requestMatchers("/api/**").permitAll()
+//                        .hasAnyAuthority("ADMIN", "USER", "GOOGLE")
+                        .anyRequest().permitAll()
                 ).logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login")
@@ -73,21 +75,22 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/home",true)
                         .failureUrl("/login?error")
                         .permitAll()
-                ).oauth2Login(
-                        oauth2Login -> oauth2Login
-                                .loginPage("/login")
-                                .failureUrl("/login?error")
-                                .userInfoEndpoint(userInfoEndpoint ->
-                                        userInfoEndpoint
-                                                .userService(oAuthService)
-                                )
-                                .successHandler((request, response, authentication) -> {
-                                    var oidcUser = (DefaultOidcUser) authentication.getPrincipal();
-                                    userService.saveOauthUser(oidcUser.getEmail(), oidcUser.getName(), Provider.GOOGLE.toString());
-                                    response.sendRedirect("/");
-                                })
-
-                                .permitAll()
+//                )
+//                .oauth2Login(
+//                        oauth2Login -> oauth2Login
+//                                .loginPage("/login")
+//                                .failureUrl("/login?error")
+//                                .userInfoEndpoint(userInfoEndpoint ->
+//                                        userInfoEndpoint
+//                                                .userService(oAuthService)
+//                                )
+//                                .successHandler((request, response, authentication) -> {
+//                                    var oidcUser = (DefaultOidcUser) authentication.getPrincipal();
+//                                    userService.saveOauthUser(oidcUser.getEmail(), oidcUser.getName(), Provider.GOOGLE.toString());
+//                                    response.sendRedirect("/");
+//                                })
+//
+//                                .permitAll()
                 ).rememberMe(rememberMe -> rememberMe
                         .key("hutech")
                         .rememberMeCookieName("hutech")

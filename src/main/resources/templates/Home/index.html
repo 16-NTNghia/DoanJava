@@ -1,15 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}" lang="en">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initialscale=1.0">
-  <title>ỨNG DỤNG QUẢN LÝ SÁCH</title>
-  <th:block th:replace="~{layout::link-css}"></th:block>
-<!--  <th:block th:replace="~{layout::custom-css}"></th:block>-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ỨNG DỤNG BUÔN NHẠC XUYÊN QUỐC GIA</title>
 </head>
-<th:block th:replace="~{layout::header}"></th:block>
-<body>
+<body layout:fragment="content">
 <div class="container">
   <div>
     <div class="carousel slide" id="carouselExample">
@@ -85,6 +82,5 @@
   </div>
 
 </div>
-<th:block th:replace="~{layout::footer}"></th:block>
 </body>
 </html>

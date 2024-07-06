@@ -1,6 +1,7 @@
 package com.example.WebsiteBanNhacCu_DoAn.Entities;
 
 import com.example.WebsiteBanNhacCu_DoAn.Validators.Annotations.ValidCategoryId;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
@@ -38,14 +39,15 @@ public class Product {
     private int price;
     @Column(name = "stock_quantity", nullable = false)
     private int stockQuantity;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
-    @ValidCategoryId
-    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
+
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @ToString.Exclude
+    @JsonBackReference
     private List<ItemInvoice> itemInvoices = new ArrayList<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

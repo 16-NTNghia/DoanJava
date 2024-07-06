@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+     <meta name="csrf-token" th:content="${_csrf.token}">
+    <title>Product Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body layout:fragment="content">
+<div class="container mt-5">
+    <h1>Product Management</h1>
+    <button onclick="loadProducts()" class="btn btn-primary mb-3">Refresh Products</button>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>STT</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Image URL</th>
+            <th>Best Seller</th>
+            <th>Stock Quantity</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="productList"></tbody>
+    </table>
+    <!-- Form to add/update a product -->
+    <form id="productForm">
+        <input type="hidden" id="productId">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" class="form-control" id="name" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description:</label>
+            <input type="text" class="form-control" id="description" required>
+        </div>
+        <div class="mb-3">
+            <label for="imageUrl" class="form-label">Image URL:</label>
+            <input type="text" class="form-control" id="imageUrl" required>
+        </div>
+        <div class="mb-3">
+            <label for="bestSeller" class="form-label">Best Seller:</label>
+            <input type="checkbox" class="form-check-input" id="bestSeller">
+        </div>
+        <div class="mb-3">
+            <label for="stockQuantity" class="form-label">Stock Quantity:</label>
+            <input type="number" class="form-control" id="stockQuantity" required>
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Price:</label>
+            <input type="number" class="form-control" id="price" required>
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label">Category:</label>
+            <select class="form-select" id="category">
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">Save Product</button>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        // Lấy token CSRF từ thẻ meta
+        csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        // Thiết lập token CSRF trong các yêu cầu AJAX
+        $.ajaxSetup({
+            headers: {
+                'X-XSRF-TOKEN': csrfToken
+            }
+        });
+
+        loadProducts();
+
+        // Form submit event
+        $('#productForm').on('submit', function (e) {
+            e.preventDefault();
+            saveProduct();
+        });
+    });
+
+    function renderProducts(products) {
+        let productList = '';
+        $.each(products, function (index, product) {
+            productList += `<tr>
+                <td>${index + 1}</td>
+                <td>${product.name}</td>
+                <td>${product.description}</td>
+                <td><img src="${product.imageUrl}" alt="${product.name}" width="50"></td>
+                <td>${product.bestSeller}</td>
+                <td>${product.stockQuantity}</td>
+                <td>${product.price}</td>
+                <td>${product.category.name}</td>
+                <td>
+                    <button onclick="editProduct(${product.id})" class="btn btn-warning">Edit</button>
+                    <button onclick="deleteProduct(${product.id})" class="btn btn-danger">Delete</button>
+                </td>
+            </tr>`;
+        });
+        $('#productList').html(productList);
+    }
+
+    function loadProducts() {
+        $.ajax({
+            url: '/api/products',
+            type: 'GET',
+            success: function (response) {
+                renderProducts(response);
+            }
+        });
+    }
+
+    function saveProduct() {
+        const productData = {
+            id: $('#productId').val(),
+            name: $('#name').val(),
+            description: $('#description').val(),
+            imageUrl: $('#imageUrl').val(),
+            bestSeller: $('#bestSeller').is(':checked'),
+            stockQuantity: parseInt($('#stockQuantity').val()),
+            price: parseInt($('#price').val()),
+            category: {
+                id: $('#category').val(),
+            }
+        };
+        const apiUrl = productData.id ? `/api/products/${productData.id}` : '/api/products';
+        const apiType = productData.id ? 'PUT' : 'POST';
+        $.ajax({
+            url: apiUrl,
+            type: apiType,
+            contentType: 'application/json',
+            data: JSON.stringify(productData),
+            success: function () {
+                resetForm();
+                loadProducts();
+                alert('Product saved successfully!');
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                alert('Failed to save the product. Please check the console for more details.');
+            }
+        });
+    }
+
+    function editProduct(id) {
+        $.ajax({
+            url: `/api/products/${id}`,
+            type: 'GET',
+            success: function (product) {
+                $('#productId').val(product.id);
+                $('#name').val(product.name);
+                $('#description').val(product.description);
+                $('#imageUrl').val(product.imageUrl);
+                $('#bestSeller').prop('checked', product.bestSeller);
+                $('#stockQuantity').val(product.stockQuantity);
+                $('#price').val(product.sold);
+                $('#category').val(product.category.id);
+            }
+        });
+    }
+
+    function deleteProduct(id) {
+        if (confirm('Are you sure you want to delete this product?')) {
+            $.ajax({
+                url: `/api/products/${id}`,
+                type: 'DELETE',
+                success: function () {
+                    loadProducts();
+                }
+            });
+        }
+    }
+
+    function resetForm() {
+        $('#productId').val('');
+        $('#name').val('');
+        $('#description').val('');
+        $('#imageUrl').val('');
+        $('#bestSeller').prop('checked', false);
+        $('#stockQuantity').val('');
+        $('#price').val('');
+        $('#category').val('');
+    }
+</script>
+</body>
+</html>

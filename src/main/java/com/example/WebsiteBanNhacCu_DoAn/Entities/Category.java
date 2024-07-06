@@ -1,5 +1,6 @@
 package com.example.WebsiteBanNhacCu_DoAn.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -8,6 +9,8 @@ import org.hibernate.Hibernate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+
 @Getter
 @Setter
 @ToString
@@ -25,9 +28,14 @@ public class Category {
     @Size(min = 1, max = 50, message = "Name must be between 1 and 50 characters")
     @NotBlank(message = "Name must not be blank")
     private String name;
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    @ToString.Exclude
-    private List<Product> products = new ArrayList<>();
+
+    @Column(name = "is_delete", nullable = false)
+    private boolean isDelete;
+
+    @OneToMany(mappedBy = "category")
+    @JsonBackReference
+    private Set<Product> product;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

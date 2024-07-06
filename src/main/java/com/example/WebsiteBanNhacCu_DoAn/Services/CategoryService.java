@@ -1,8 +1,11 @@
 package com.example.WebsiteBanNhacCu_DoAn.Services;
 
 import com.example.WebsiteBanNhacCu_DoAn.Entities.Category;
+import com.example.WebsiteBanNhacCu_DoAn.Entities.Product;
 import com.example.WebsiteBanNhacCu_DoAn.Repositories.ICategoryRepository;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,29 +14,40 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CategoryService{
-    private final ICategoryRepository categoryRepository;
+    @Autowired
+    private ICategoryRepository categoryRepository;
+    @Autowired
+    private ProductService productService;
 
-    public List<Category> getAllCategories(){
-        return categoryRepository.findAll();
+    public List<Category> getCategories() {
+        return categoryRepository.findByIsDeleteFalse();
     }
+
     public Optional<Category> getCategoryById(Long id) {
-        return categoryRepository.findById(id);
+        return categoryRepository.findByIdAndIsDeleteFalse(id);
     }
-    public void addCategory(Category category) {
-        categoryRepository.save(category);
+
+    public Category addCategory(Category category) {
+        return categoryRepository.save(category);
     }
-    public Category findById(Long id){
-        return  categoryRepository.findById(id).orElse(null);
+
+    public Category updateCategory(@NotNull Category category){
+        Category existingCategory = categoryRepository.findByIdAndIsDeleteFalse(category.getId())
+                .orElseThrow(() -> new IllegalStateException("Category with ID " + category.getId() + " does not exist."));
+        existingCategory.setName(category.getName());
+        return categoryRepository.save(existingCategory);
     }
-    public void updateCategory(Category category) {
-        Category existingCategory = categoryRepository
-                .findById(category.getId())
-                .orElse(null);
-        Objects.requireNonNull(existingCategory)
-                .setName(category.getName());
-        categoryRepository.save(existingCategory);
-    }
-    public void deleteCategoryById(Long id) {
-        categoryRepository.deleteById(id);
+
+    public void deleteCategory(Long id) {
+        Category existingCategory = categoryRepository.findByIdAndIsDeleteFalse(id)
+                .orElseThrow(() -> new IllegalStateException("Category with ID " + id + " does not exist."));
+        existingCategory.setDelete(true);// Update the isDelete flag
+        List<Product> products = productService.getProductsByCategoryId(id);
+        // Đánh dấu isDelete của các product liên quan là true
+        for (Product product : products) {
+            product.setDelete(true);
+            productService.updateProducts(product); // Cần gọi lại service để cập nhật product
+        }
+        categoryRepository.save(existingCategory); // Save the updated category
     }
 }
