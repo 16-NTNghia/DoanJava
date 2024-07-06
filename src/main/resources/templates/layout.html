@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My App</title>
+    <link th:fragment="link-css" rel="stylesheet"
+          th:href="@{/css/bootstrap.min.css}">
+    <link th:fragment="custom-css" rel="stylesheet"
+          th:href="@{static/style.css}">
+</head>
+<body class="d-flex flex-column h-100">
+<!--<header th:fragment="header">-->
+<!--    <nav class="navbar navbar-expand-lg navbar-light bg-light">-->
+<!--        <div class="container-fluid">-->
+<!--            <a class="navbar-brand" href="/">HUTECH</a>-->
+<!--            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"-->
+<!--                    data-bs-target="#navbarSupportedContent"-->
+<!--                    aria-controls="navbarSupportedContent"-->
+<!--                    aria-expanded="false" aria-label="Toggle navigation">-->
+<!--                <span class="navbar-toggler-icon"></span>-->
+<!--            </button>-->
+<!--            <div class="collapse navbar-collapse"-->
+<!--                 id="navbarSupportedContent">-->
+<!--                <ul class="navbar-nav me-auto mb-2 mb-lg-0">-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link active" aria-current="page"-->
+<!--                           href="/">Home</a>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN', 'USER')">-->
+<!--                        <a class="nav-link" href="/products">-->
+<!--                            List Product-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item"-->
+<!--                        sec:authorize="hasAnyAuthority('ADMIN')">-->
+<!--                        <a class="nav-link" href="/products/add">-->
+<!--                            Add Product-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item"-->
+<!--                        sec:authorize="hasAnyAuthority('ADMIN')">-->
+<!--                        <a class="nav-link" href="/Admin">-->
+<!--                            Admin Product-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN', 'USER')">-->
+<!--                        <a class="nav-link" href="/cart">-->
+<!--                            Cart-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li sec:authorize="isAuthenticated()">-->
+<!--                        <form th:action="@{/logout}" method="post">-->
+<!--                            <button class="btn btn-outline-danger"-->
+<!--                                    type="submit">Logout</button>-->
+<!--                        </form>-->
+<!--                    </li>-->
+<!--                    <li sec:authorize="!isAuthenticated()">-->
+<!--                        <a class="btn btn-outline-primary" href="/login">-->
+<!--                            Login-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </nav>-->
+<!--</header>-->
+<header th:fragment="header">
+    <!-- Dòng 1 -->
+    <link
+            crossorigin="anonymous"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+            rel="stylesheet"
+    />
+    <link th:href="@{/style.css}" rel="stylesheet" type="text/css">
+    <div class="header-row">
+        <div class="left">
+            <div class="d-flex">
+                <img alt="Logo" class="logo" th:src="@{/public/logo-12x.png}"/>
+                <div class="right navigation justify-content-center d-flex justify-content-center">
+                    <a href="/">Trang Chủ</a>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN', 'USER')">
+                        <a class="nav-link" href="/products">
+                            Sản phẩm
+                        </a>
+                    </li>
+                    <li class="nav-item"
+                        sec:authorize="hasAnyAuthority('ADMIN')">
+                        <a class="nav-link" href="/products/add">
+                            Add Product
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN', 'USER')">
+                        <a class="nav-link" href="/cart">
+                            Cart
+                        </a>
+                    </li>
+                    <li sec:authorize="isAuthenticated()">
+                        <form th:action="@{/logout}" method="post">
+                            <button class="btn btn-outline-danger"
+                                    type="submit">Logout</button>
+                        </form>
+                    </li>
+                </div>
+            </div>
+
+            <!-- <div>Chào mừng bạn đến với Musical</div> -->
+        </div>
+        <div class="right">
+            <div class="d-flex">
+                <div class="center" style="margin-right: 20px">
+                    <label>
+                        <input placeholder="Tìm kiếm..." type="text"/>
+                    </label>
+                </div>
+                <div class="right">
+                    <img alt="Cart Icon" th:src="@{/public/-icon-cart.svg}"/>
+                    <button sec:authorize="!isAuthenticated()" href="/login" class="btn btn-info" data-bs-target="#exampleModal" data-bs-toggle="modal" type="button">
+                        Đăng Nhập
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Dòng 3 -->
+    <div class="header-row">
+        <div class="left navigation">
+            <img alt="" th:src="@{/public/-icon-menu.svg}"/>
+            <button
+                    aria-controls="offcanvasTop"
+                    class="btn btn-info"
+                    data-bs-target="#offcanvasTop"
+                    data-bs-toggle="offcanvas"
+                    type="button"
+            >
+                Danh mục sản phẩm
+            </button>
+
+            <div
+                    aria-labelledby="offcanvasTopLabel"
+                    class="offcanvas offcanvas-top"
+                    id="offcanvasTop"
+                    tabindex="-1"
+            >
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasTopLabel">
+                        Offcanvas top
+                    </h5>
+                    <button
+                            aria-label="Close"
+                            class="btn-close"
+                            data-bs-dismiss="offcanvas"
+                            type="button"
+                    ></button>
+                </div>
+                <div class="offcanvas-body">...</div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div th:fragment="content"></div>
+</div>
+<!-- Add more product cards as needed -->
+<footer th:fragment="footer">
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>Về Chúng Tôi</h3>
+            <a href="#">Giới Thiệu</a>
+            <a href="#">Điều Khoản Sử Dụng</a>
+            <a href="#">Chính Sách Bảo Mật</a>
+        </div>
+        <div class="footer-section">
+            <h3>Hỗ Trợ</h3>
+            <a href="#">Câu Hỏi Thường Gặp</a>
+            <a href="#">Liên Hệ Hỗ Trợ</a>
+            <a href="#">Hướng Dẫn Sử Dụng</a>
+        </div>
+        <div class="footer-section">
+            <h3>Theo Dõi Chúng Tôi</h3>
+            <div class="social-media-footer d-flex justify-content-center">
+                <a href="#"
+                ><img
+                        alt="Facebook"
+                        th:src="@{/public/iconmediasocialfacebookfreevector-12x.png}"
+                /></a>
+                <a href="#"
+                ><img
+                        alt="Zalo"
+                        th:src="@{/public/82532235b1c99e391706a9c6e396aeaa-12x.png}"
+                /></a>
+                <a href="#"
+                ><img
+                        alt="Instagram"
+                        th:src="@{/public/iconmediasocialinstagramfreevector-12x.png}"
+                /></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024 Musical. All rights reserved.</p>
+    </div>
+</footer>
+<script
+        crossorigin="anonymous"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+></script>
+<script
+        crossorigin="anonymous"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+></script>
+</body>
+</html>

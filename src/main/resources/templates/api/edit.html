@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Book List</title>
+    <th:block th:replace="~{layout :: link-css}"></th:block>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<th:block th:replace="~{layout::header}"></th:block>
+<div class="container">
+    <h1>Edit Book</h1>
+    <form id="editBookForm" th:object="${product}">
+        <input type="hidden" th:field="*{id}">
+        <div class="col-6 mb-3">
+            <label class="form-label" for="title">Title:</label>
+            <input class="form-control" type="text" th:field="*{title}" id="title" autofocus>
+            <span class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label" for="author">Author:</label>
+            <input class="form-control" type="text" th:field="*{author}" id="author">
+            <span class="text-danger" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></span>
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label" for="price">Price:</label>
+            <input class="form-control" type="text" th:field="*{price}" id="price">
+            <span class="text-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label" for="category">Category:</label>
+            <select class="form-control" id="category" th:field="*{category.id}">
+                <option value="">-- Select Category --</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category.getId()}"
+                        th:text="${category.getName()}"
+                        th:selected="${category.getId() == product.category.getId()}"></option>
+            </select>
+        </div>
+        <input type="submit" value="Save" class="btn btn-primary">
+    </form>
+    <br>
+    <a th:href="@{/books}">Back to List</a>
+</div>
+<th:block th:replace="~{layout::footer}"></th:block>
+
+<script>
+    $(document).ready(function() {
+        $('#editBookForm').on('submit', function(event) {
+            event.preventDefault();
+
+            const bookData = {
+                id: $('#editBookForm input[name="id"]').val(),
+                title: $('#title').val(),
+                author: $('#author').val(),
+                price: $('#price').val(),
+                categoryId: $('#category').val()
+            };
+
+            const bookId = bookData.id;
+
+            $.ajax({
+                url: `http://localhost:8080/api/v1/books/update/${bookId}`,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(bookData),
+                success: function(response) {
+                    alert('Book updated successfully!');
+                    window.location.href = '/home/api';
+                },
+                error: function(error) {
+                    alert('An error occurred while updating the product.');
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
