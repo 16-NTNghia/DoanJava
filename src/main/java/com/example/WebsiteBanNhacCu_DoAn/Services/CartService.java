@@ -1,71 +1,52 @@
 package com.example.WebsiteBanNhacCu_DoAn.Services;
 
-import com.example.WebsiteBanNhacCu_DoAn.Entities.Cart;
-import com.example.WebsiteBanNhacCu_DoAn.Entities.Item;
-import com.example.WebsiteBanNhacCu_DoAn.Entities.Invoice;
-import com.example.WebsiteBanNhacCu_DoAn.Entities.ItemInvoice;
+import com.example.WebsiteBanNhacCu_DoAn.Entities.*;
 import com.example.WebsiteBanNhacCu_DoAn.Repositories.IProductRepository;
 import com.example.WebsiteBanNhacCu_DoAn.Repositories.IInvoiceRepository;
 import com.example.WebsiteBanNhacCu_DoAn.Repositories.IItemInvoiceRepository;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.annotation.SessionScope;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 @Service
-@RequiredArgsConstructor
-@Transactional(isolation = Isolation.SERIALIZABLE,
-        rollbackFor = {Exception.class, Throwable.class})
+@SessionScope
 public class CartService {
-    private static final String CART_SESSION_KEY = "cart";
-    private final IInvoiceRepository invoiceRepository;
-    private final IItemInvoiceRepository itemInvoiceRepository;
-    private final IProductRepository productRepository;
-    public Cart getCart(@NotNull HttpSession session) {
-        return Optional.ofNullable((Cart)
-                        session.getAttribute(CART_SESSION_KEY))
-                .orElseGet(() -> {
-                    Cart cart = new Cart();
-                    session.setAttribute(CART_SESSION_KEY, cart);
-                    return cart;
-                });
+    private List<Cart> cartItems = new ArrayList<>();
+    @Autowired
+    private IProductRepository productRepository;
+
+    public void addToCart(Long productId, int quantity) {
+        Product product = productRepository.findByIdAndIsDeleteFalse(productId).orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
+        cartItems.add(new Cart(product, quantity));
     }
-    public void updateCart(@NotNull HttpSession session, Cart cart) {
-        session.setAttribute(CART_SESSION_KEY, cart);
+
+    public double calculateTotal() {
+        double total = 0.0;
+        for (Cart cartItem : cartItems) {
+            total += cartItem.getProduct().getPrice() * cartItem.getQuantity();
+        }
+        return total;
     }
-    public void removeCart(@NotNull HttpSession session) {
-        session.removeAttribute(CART_SESSION_KEY);
+
+    public List<Cart> getCartItems() {
+        return cartItems;
     }
-    public int getSumQuantity(@NotNull HttpSession session) {
-        return getCart(session).getCartItems().stream()
-                .mapToInt(Item::getQuantity)
-                .sum();
+
+    public void removeFromCart(Long productId) {
+        cartItems.removeIf(item -> item.getProduct().getId().equals(productId));
     }
-    public double getSumPrice(@NotNull HttpSession session) {
-        return getCart(session).getCartItems().stream()
-                .mapToDouble(item -> item.getPrice() *
-                        item.getQuantity())
-                .sum();
-    }
-    public void saveCart(@NotNull HttpSession session) {
-        var cart = getCart(session);
-        if (cart.getCartItems().isEmpty()) return;
-        var invoice = new Invoice();
-        invoice.setInvoiceDate(new Date(new Date().getTime()));
-        invoice.setPrice(getSumPrice(session));
-        invoiceRepository.save(invoice);
-        cart.getCartItems().forEach(item -> {
-            var items = new ItemInvoice();
-            items.setInvoice(invoice);
-            items.setQuantity(item.getQuantity());
-            items.setProduct(productRepository.findById(item.getProductId())
-                    .orElseThrow());
-            itemInvoiceRepository.save(items);
-        });
-        removeCart(session);
+
+    public void clearCart() {
+        cartItems.clear();
     }
 }
 

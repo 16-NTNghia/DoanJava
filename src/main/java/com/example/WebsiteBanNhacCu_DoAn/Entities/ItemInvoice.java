@@ -21,7 +21,7 @@ public class ItemInvoice {
     @Positive(message = "Quantity must be positive")
     private int quantity;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
     @ToString.Exclude
     private Product product;
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin chi tiết</title>
+</head>
+<body layout:fragment="content">
+        <div class="mb-3 mt-5 text-center">
+            <img th:alt="${product.name}" class="card-img-top" th:src="@{/Images/{imageName}(imageName=${product.imageUrl})}" height="500">
+        </div>
+        <div class="row">
+            <div class="d-flex" style="margin-left: 300px">
+                <h5 class="col-md-1">Sản phẩm: </h5><span class="col-md-11" th:text="${product.name}"></span>
+            </div>
+            <div class="d-flex" style="margin-left: 300px">
+                <h5 class="col-md-1">Giá: </h5> <span class="col-md-11" th:text="${product.price}"></span>
+            </div>
+            <div class="d-flex" style="margin-left: 300px">
+                <h5 class="col-md-1">Mô tả: </h5> <span class="col-md-11" th:text="${product.description}"></span>
+            </div>
+            <form th:action="@{/cart/add}" method="post">
+                <div class="float-end">
+                    <input type="number" name="quantity" min="1" value="1" class="form-control d-inline-block" style="width: 70px;">
+                    <input type="hidden" th:value="${product.id}" name="productId"/>
+                    <input class="btn btn-success" type="submit" value="Đặt hàng">
+                </div>
+
+            </form>
+    <br>
+    <a th:href="@{/products/list}">Back to List</a>
+</body>
+</html>

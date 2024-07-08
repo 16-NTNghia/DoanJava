@@ -1,7 +1,9 @@
 package com.example.WebsiteBanNhacCu_DoAn.Repositories;
 
 import com.example.WebsiteBanNhacCu_DoAn.Entities.Product;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -37,6 +39,9 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
 //             """)
 //    List<Product> searchProductByCategory(String keyword);
 //    List<Product> findByNameContainingIgnoreCase(String title);
+
+    @Query("SELECT p FROM Product p WHERE p.isDelete = false")
+    Page<Product> findAllByIsDeleteFalse(Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.isDelete = false")
     List<Product> findByIsDeleteFalse();

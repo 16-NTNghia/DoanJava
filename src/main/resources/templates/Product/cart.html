@@ -1,75 +1,56 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initialscale=1.0">
-    <title>Cart</title>
-    <th:block th:replace="~{layout::link-css}"></th:block>
-    <th:block th:replace="~{layout::custom-css}"></th:block>
+    <title th:text="${title} ?: 'Your Cart'">Your Cart</title>
 </head>
 <body>
-<th:block th:replace="~{layout::header}"></th:block>
-<div class="container" th:if="${not #lists.isEmpty(cart.cartItems)}">
-    <table class="table">
-        <thead>
+<section layout:fragment="content">
+    <h1>Your Cart</h1>
+    <div th:if="${cartItems.isEmpty()}" class="alert alert-info">Your cart is empty.</div>
+    <table class="table" th:unless="${cartItems.isEmpty()}">
+        <thead class="table-light">
         <tr>
-            <th scope="col">Book ID</th>
-            <th scope="col">Book Name</th>
-            <th scope="col">Quantity</th>
-            <th scope="col">Price</th>
-            <th scope="col">Total</th>
-            <th scope="col">Action</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Action</th>
         </tr>
         </thead>
-        <tbody>
-        <tr th:each="item : ${cart.cartItems}">
-            <td th:text="${item.getBookId()}"></td>
-            <td th:text="${item.getBookName()}"></td>
+        <tbody th:each="item : ${cartItems}">
+        <tr >
+            <td th:text="${item.product.name}"></td>
             <td>
-                <label>
-                    <input type="number" min="1"
-                           th:value="${item.getQuantity()}"
-                           th:attr="data-id=${item.getBookId()}"
-                           class="form-control quantity">
-                </label>
+                <input type="number" name="quantities" th:value="${item.quantity}" min="1" class="form-control d-inline-block" style="width: 70px;">
             </td>
-            <td th:text="${item.getPrice()}"></td>
-            <td th:text="${item.getPrice() * item.getQuantity()}"></td>
+            <td th:text="${item.product.price}"></td>
+            <td th:text="${item.product.price * item.quantity}"></td>
             <td>
-                <a class="btn btn-danger"
-                   th:href="@{/cart/removeFromCart/{id}(id=${item.getBookId()})}">
-                    Remove
-                </a>
+                <a th:href="@{/cart/remove/{productId}(productId=${item.product.id})}" class="btn btn-danger btn-sm">Remove</a>
             </td>
         </tr>
+<!--        <input th:text="">-->
         </tbody>
     </table>
-    <div class="row">
-        <div class="col-md-12">
-            <h3>Total: <span th:text="${totalPrice}"></span></h3>
+
+    <div class="border border-danger rounded float-end">
+        <div style="font-weight: 500">
+            <label style="color:red;">Total Price:</label>
+            <span th:text="${total}"></span>
         </div>
-        <div class="col-md-12 text-center">
-            <a class="btn btn-success"
-               th:href="@{/cart/checkout}">Checkout</a>
-            <a class="btn btn-danger"
-               th:href="@{/cart/clearCart}">Clear Cart</a>
-        </div>
-    </div>
-</div>
-<div class="container" th:if="${#lists.isEmpty(cart.cartItems)}">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 offset-md-3 text-center">
-                <h3 class="mt-5">Your cart is empty</h3>
-                <p class="lead">Please add some books to your cart</p>
-                <a class="btn btn-primary" href="/books">Go to list
-                    product</a>
-            </div>
+        <div>
+            
         </div>
     </div>
-</div>
-<th:block th:replace="~{layout::footer}"></th:block>
-<script th:src="@{/js/cart.js}"></script>
+
+    <div class="mt-3">
+        <a th:href="@{/cart/clear}" class="btn btn-secondary">Clear Cart</a>
+    </div>
+
+    <div class="mt-3">
+        <a th:href="@{/products/list}" class="btn btn-secondary">Back</a>
+    </div>
+</section>
 </body>
 </html>

@@ -26,6 +26,11 @@
         </tr>
         </thead>
         <tbody id="productList"></tbody>
+        <div>
+            <button onclick="loadProducts(currentPage - 1)" class="btn btn-secondary" id="prevPage">Previous</button>
+            <span id="currentPage"></span>
+            <button onclick="loadProducts(currentPage + 1)" class="btn btn-secondary" id="nextPage">Next</button>
+        </div>
     </table>
     <!-- Form to add/update a product -->
     <form id="productForm">
@@ -105,15 +110,36 @@
         $('#productList').html(productList);
     }
 
-    function loadProducts() {
+    let currentPage = 0;
+    const pageSize = 9;
+
+    function loadProducts(page = 0) {
         $.ajax({
-            url: '/api/products',
+            url: `/api/products?page=${page}&size=${pageSize}`,
             type: 'GET',
             success: function (response) {
-                renderProducts(response);
+                currentPage = page;
+                renderProducts(response.content);
+                updatePaginationButtons(response);
             }
         });
     }
+
+    function updatePaginationButtons(pageData) {
+        $('#currentPage').text(`Page ${pageData.number + 1} of ${pageData.totalPages}`);
+        $('#prevPage').prop('disabled', pageData.number === 0);
+        $('#nextPage').prop('disabled', pageData.number + 1 >= pageData.totalPages);
+    }
+
+    // function loadProducts() {
+    //     $.ajax({
+    //         url: '/api/products',
+    //         type: 'GET',
+    //         success: function (response) {
+    //             renderProducts(response);
+    //         }
+    //     });
+    // }
 
     function saveProduct() {
         const productData = {
@@ -158,7 +184,7 @@
                 $('#imageUrl').val(product.imageUrl);
                 $('#bestSeller').prop('checked', product.bestSeller);
                 $('#stockQuantity').val(product.stockQuantity);
-                $('#price').val(product.sold);
+                $('#price').val(product.price);
                 $('#category').val(product.category.id);
             }
         });

@@ -10,6 +10,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,83 +30,43 @@ public class ProductController {
                 categoryService.getCategories());
         return "product/index";
     }
-//    @GetMapping("/add")
-//    public String addProductForm(@NotNull Model model) {
-//        model.addAttribute("product", new Product());
-//        model.addAttribute("categories",
-//                categoryService.getCategories());
-//        return "product/add";
-//    }
-//    @PostMapping("/add")
-//    public String addProduct(
-//            @Valid @ModelAttribute("product") Product product,
-//            @NotNull BindingResult bindingResult,
-//            Model model) {
-//        if (bindingResult.hasErrors()) {
-//            var errors = bindingResult.getAllErrors()
-//                    .stream()
-//                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-//                    .toArray(String[]::new);
-//            model.addAttribute("errors", errors);
-//            model.addAttribute("categories",
-//                    categoryService.getCategories());
-//            return "product/add";
-//        }
-//        productService.addProduct(product);
-//        return "redirect:/products";
-//    }
-//
-//    @PostMapping("/add-to-cart")
-//    public String addToCart(HttpSession session,
-//                            @RequestParam long id,
-//                            @RequestParam String name,
-//                            @RequestParam int price,
-//                            @RequestParam String description,
-//                            @RequestParam(defaultValue = "1") int
-//                                    quantity) {
-//        var cart = cartService.getCart(session);
-//        cart.addItems(new Item(id, name, price, description, quantity));
-//        cartService.updateCart(session, cart);
-//        return "redirect:/products";
-//    }
-//
-//    @GetMapping("/edit/{id}")
-//    public String editProductForm(@NotNull Model model, @PathVariable long id)
-//    {
-//        var product = productService.getProductById(id);
-//        model.addAttribute("product", product.orElseThrow(() -> new
-//                IllegalArgumentException("Product not found")));
-//        model.addAttribute("categories",
-//                categoryService.getCategories());
-//        return "product/edit";
-//    }
-//    @PostMapping("/edit")
-//    public String editProduct(@Valid @ModelAttribute("product") Product product,
-//                              @NotNull BindingResult bindingResult,
-//                              Model model) {
-//        if (bindingResult.hasErrors()) {
-//            var errors = bindingResult.getAllErrors()
-//                    .stream()
-//                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-//                    .toArray(String[]::new);
-//            model.addAttribute("errors", errors);
-//            model.addAttribute("categories",
-//                    categoryService.getCategories());
-//            return "product/edit";
-//        }
-//        productService.updateProduct(product);
-//        return "redirect:/products";
-//    }
-//
-//
-//    @GetMapping("/delete/{id}")
-//    public String deleteProduct(@PathVariable long id) {
-//        productService.getProductById(id)
-//                .ifPresentOrElse(
-//                        product -> productService.deleteProduct(id),
-//                        () -> { throw new IllegalArgumentException("Product not found"); });
-//        return "redirect:/products";
-//    }
+    @GetMapping("/list")
+    public String listProductForm(@NotNull Model model,
+                                  @RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "9", required = false) int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productsPage = productService.getAllProducts(pageable);
+        model.addAttribute("products", productsPage);
+        return "product/list";
+    }
+
+    @GetMapping("/{id}")
+    public String editProductForm(@NotNull Model model, @PathVariable long id)
+    {
+        var product = productService.getProductById(id);
+        model.addAttribute("product", product.orElseThrow(() -> new
+                IllegalArgumentException("Product not found")));
+        model.addAttribute("categories",
+                categoryService.getCategories());
+        return "product/detail";
+    }
+    @PostMapping("/edit")
+    public String editProduct(@Valid @ModelAttribute("product") Product product,
+                              @NotNull BindingResult bindingResult,
+                              Model model) {
+        if (bindingResult.hasErrors()) {
+            var errors = bindingResult.getAllErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .toArray(String[]::new);
+            model.addAttribute("errors", errors);
+            model.addAttribute("categories",
+                    categoryService.getCategories());
+            return "product/edit";
+        }
+        productService.updateProduct(product);
+        return "redirect:/products";
+    }
 //    @GetMapping("/search")
 //    public String searchProduct(
 //            @NotNull Model model,

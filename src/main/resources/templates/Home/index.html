@@ -11,6 +11,7 @@
   <div>
     <div class="carousel slide" id="carouselExample">
       <div class="carousel-inner">
+
         <div class="carousel-item active">
           <img
                   alt="..."
@@ -52,34 +53,51 @@
   </div>
 
   <div class="d-flex m-2 p-2 justify-content-center">
-    <div class="card" style="width: 18rem;">
-      <img alt="..." class="card-img-top" th:src="@{/public/card-image-1.png}">
+    <!-- Vòng lặp để chỉ hiển thị 3 sản phẩm đầu tiên dưới dạng các thẻ card -->
+    <div th:each="product, iterStat : ${products}" th:if="${iterStat.index < 3}" class="card" style="width: 18rem;">
+      <img th:alt="${product.name}" class="card-img-top mt-2" th:src="@{/Images/{imageName}(imageName=${product.imageUrl})}">
       <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-          content.</p>
-        <a class="btn btn-primary" href="#">Go somewhere</a>
-      </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-      <img alt="..." class="card-img-top" th:src="@{/public/card-image-2.png}">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-          content.</p>
-        <a class="btn btn-primary" href="#">Go somewhere</a>
-      </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-      <img alt="..." class="card-img-top" th:src="@{/public/card-image-3.png}">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-          content.</p>
-        <a class="btn btn-primary" href="#">Go somewhere</a>
+        <h5 class="card-title" th:text="${product.name}"></h5>
+        <p class="card-text" th:text="${product.description}"></p>
+        <p class="card-text"><strong>Price: </strong><span th:text="${product.price}"></span></p>
+        <p class="card-text"><strong>Stock Quantity: </strong><span th:text="${product.stockQuantity}"></span></p>
+        <a class="btn btn-primary" th:href="@{'/products/' + ${product.id}}">Xem chi tiết</a>
       </div>
     </div>
   </div>
+  <div class="d-flex m-2 p-2 justify-content-center">
+    <a href="/products/list" class="btn btn-outline-success"> Tất cả sản phẩm</a>
+  </div>
+
+<!--  <div class="d-flex m-2 p-2 justify-content-center">-->
+<!--    <div class="card" style="width: 18rem;">-->
+<!--      <img alt="..." class="card-img-top" th:src="@{/public/card-image-1.png}">-->
+<!--      <div class="card-body">-->
+<!--        <h5 class="card-title">Card title</h5>-->
+<!--        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's-->
+<!--          content.</p>-->
+<!--        <a class="btn btn-primary" href="#">Go somewhere</a>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="card" style="width: 18rem;">-->
+<!--      <img alt="..." class="card-img-top" th:src="@{/public/card-image-2.png}">-->
+<!--      <div class="card-body">-->
+<!--        <h5 class="card-title">Card title</h5>-->
+<!--        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's-->
+<!--          content.</p>-->
+<!--        <a class="btn btn-primary" href="#">Go somewhere</a>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="card" style="width: 18rem;">-->
+<!--      <img alt="..." class="card-img-top" th:src="@{/public/card-image-3.png}">-->
+<!--      <div class="card-body">-->
+<!--        <h5 class="card-title">Card title</h5>-->
+<!--        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's-->
+<!--          content.</p>-->
+<!--        <a class="btn btn-primary" href="#">Go somewhere</a>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
 
 </div>
 </body>
