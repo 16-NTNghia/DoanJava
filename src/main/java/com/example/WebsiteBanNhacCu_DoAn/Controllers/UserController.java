@@ -1,10 +1,12 @@
 package com.example.WebsiteBanNhacCu_DoAn.Controllers;
 
 import com.example.WebsiteBanNhacCu_DoAn.Entities.User;
+import com.example.WebsiteBanNhacCu_DoAn.Services.ProfileService;
 import com.example.WebsiteBanNhacCu_DoAn.Services.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 @RequiredArgsConstructor
 public class UserController {
+    @Autowired
+    private ProfileService profileService;
     private final UserService userService;
     @GetMapping("/login")
     public String login() {
@@ -41,6 +45,7 @@ public class UserController {
         }
         userService.save(user);
         userService.setDefaultRole(user.getUsername());
+        profileService.saveProfile(user);
         return "redirect:/login";
     }
 

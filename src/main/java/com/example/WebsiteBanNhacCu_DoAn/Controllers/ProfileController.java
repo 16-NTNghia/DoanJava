@@ -21,9 +21,15 @@ public class ProfileController {
     @Autowired
     private ProfileService profileService;
     private final String UPLOAD_DIR = "uploads/";
-    @GetMapping
-    public String getAllProfiles(Model model, User user) {
-        model.addAttribute("profiles",user.getId());
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/{username}")
+    public String getProfileByUserId(Model model,@PathVariable String username) {
+        Profile profiles = profileService.getProfileByUsername(username);
+        if(profiles==null)
+            return "redirect:/profiles/new";
+        model.addAttribute("profile", profiles);
         return "profiles/list";
     }
 
@@ -33,12 +39,6 @@ public class ProfileController {
         return "profiles/create";
     }
 
-//    @PostMapping
-//    public String createProfile(@ModelAttribute("profile") Profile profile) {
-//        profileService.saveProfile(profile);
-//        return "redirect:/profiles";
-//    }
-
     @GetMapping("/edit/{id}")
     public String editProfileForm(@PathVariable Long id, Model model) {
         model.addAttribute("profile", profileService.getProfileById(id));
@@ -47,17 +47,10 @@ public class ProfileController {
 
     @PostMapping("/{id}")
     public String updateProfile(@PathVariable Long id, @ModelAttribute("profile") Profile profile) {
-        profile.setId(id);
         profileService.updateProfile(profile);
-        return "redirect:/profiles";
+      
+        return "redirect:/profiles/"+ userService.getusername(profile.getUser().getId());
     }
-
-    @GetMapping("/delete/{id}")
-    public String deleteProfile(@PathVariable Long id) {
-        profileService.deleteProfile(id);
-        return "redirect:/profiles";
-    }
-
 
     private void savePhoto(Profile profile, MultipartFile photoFile) throws IOException {
         if (photoFile != null && !photoFile.isEmpty()) {

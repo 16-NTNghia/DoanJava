@@ -10,7 +10,6 @@
           th:href="@{/css/bootstrap.min.css}">
     <link th:fragment="custom-css" rel="stylesheet"
           th:href="@{/style.css}">
-    <!-- Dòng 1 -->
     <link
             crossorigin="anonymous"
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -21,157 +20,70 @@
     <link th:href="@{/style.css}" rel="stylesheet" type="text/css">
 </head>
 <body class="d-flex flex-column h-100">
-<!--<header th:fragment="header">-->
-<!--    <nav class="navbar navbar-expand-lg navbar-light bg-light">-->
-<!--        <div class="container-fluid">-->
-<!--            <a class="navbar-brand" href="/">HUTECH</a>-->
-<!--            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"-->
-<!--                    data-bs-target="#navbarSupportedContent"-->
-<!--                    aria-controls="navbarSupportedContent"-->
-<!--                    aria-expanded="false" aria-label="Toggle navigation">-->
-<!--                <span class="navbar-toggler-icon"></span>-->
-<!--            </button>-->
-<!--            <div class="collapse navbar-collapse"-->
-<!--                 id="navbarSupportedContent">-->
-<!--                <ul class="navbar-nav me-auto mb-2 mb-lg-0">-->
-<!--                    <li class="nav-item">-->
-<!--                        <a class="nav-link active" aria-current="page"-->
-<!--                           href="/">Home</a>-->
-<!--                    </li>-->
-<!--                    <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN', 'USER')">-->
-<!--                        <a class="nav-link" href="/products">-->
-<!--                            List Product-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li class="nav-item"-->
-<!--                        sec:authorize="hasAnyAuthority('ADMIN')">-->
-<!--                        <a class="nav-link" href="/products/add">-->
-<!--                            Add Product-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li class="nav-item"-->
-<!--                        sec:authorize="hasAnyAuthority('ADMIN')">-->
-<!--                        <a class="nav-link" href="/Admin">-->
-<!--                            Admin Product-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN', 'USER')">-->
-<!--                        <a class="nav-link" href="/cart">-->
-<!--                            Cart-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li sec:authorize="isAuthenticated()">-->
-<!--                        <form th:action="@{/logout}" method="post">-->
-<!--                            <button class="btn btn-outline-danger"-->
-<!--                                    type="submit">Logout</button>-->
-<!--                        </form>-->
-<!--                    </li>-->
-<!--                    <li sec:authorize="!isAuthenticated()">-->
-<!--                        <a class="btn btn-outline-primary" href="/login">-->
-<!--                            Login-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                </ul>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </nav>-->
-<!--</header>-->
 <header>
-
     <div class="header-row">
         <div class="left">
-            <div class="d-flex">
+            <div class="d-flex ">
                 <img alt="Logo" class="logo" th:src="@{/public/logo-1@2x.png}"/>
-                <div class="right navigation justify-content-center d-flex justify-content-center">
+                <div class="right navigation  d-flex justify-content-center">
                     <a href="/home">Trang Chủ</a>
                     <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN', 'USER')">
                         <a class="nav-link" href="/products/list">
                             Sản phẩm
                         </a>
                     </li>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN', 'USER')">
+                        <a class="nav-link" href="/cart">
+                            Giỏ Hàng
+                        </a>
+                    </li>
                     <li class="nav-item"
                         sec:authorize="hasAnyAuthority('ADMIN')">
-                        <a class="nav-link" href="/products">
+                        <a class="nav-link" href="/products/admin">
                             Product
                         </a>
                     </li>
-                    <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN', 'USER')">
-                        <a class="nav-link" href="/cart">
-                            Cart
+                    <li class="nav-item"
+                        sec:authorize="hasAnyAuthority('ADMIN')">
+                        <a class="nav-link" href="/categories">
+                            Categories
                         </a>
                     </li>
-                    <li sec:authorize="isAuthenticated()">
-                        <form th:action="@{/logout}" method="post">
-                            <button class="btn btn-outline-danger"
-                                    type="submit">Logout</button>
-                        </form>
-                    </li>
                 </div>
             </div>
-
-            <!-- <div>Chào mừng bạn đến với Musical</div> -->
         </div>
         <div class="right">
-            <div class="d-flex">
-                <div class="center" style="margin-right: 20px">
-                    <label>
-                        <input placeholder="Tìm kiếm..." type="text"/>
-                    </label>
-                </div>
                 <div class="right">
-                    <img alt="Cart Icon" th:src="@{/public/-icon-cart.svg}"/>
-                    <a sec:authorize="!isAuthenticated()" th:href="@{/login}" class="btn btn-info">
+                    <a class="nav-link" href="/cart">
+                        <img alt="Cart Icon" th:src="@{/public/-icon-cart.svg}"/>
+                    </a>
+                    <a sec:authorize="!isAuthenticated()" href="/login" class="btn btn-info">
                         Đăng Nhập
                     </a>
-
+                    <div class="dropdown" sec:authorize="isAuthenticated()">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="navbar-text text-white">
+                             Xin chào, <span sec:authentication="name" style="margin-right: 20px;"></span>
+                             </span>
+                        </button>
+                        <ul class="dropdown-menu" sec:authorize="isAuthenticated()">
+                            <li><a class="dropdown-item" th:href="@{'/profiles/' + ${#authentication.name}}">Profile</a></li>
+                            <li >
+                                <form th:action="@{/logout}" method="post">
+                                    <button class="btn btn-outline-danger" type="submit">Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <!-- Dòng 3 -->
-    <div class="header-row">
-        <div class="left navigation">
-            <img alt="" th:src="@{/public/-icon-menu.svg}"/>
-            <button
-                    aria-controls="offcanvasTop"
-                    class="btn btn-info"
-                    data-bs-target="#offcanvasTop"
-                    data-bs-toggle="offcanvas"
-                    type="button"
-            >
-                Danh mục sản phẩm
-            </button>
-
-            <div
-                    aria-labelledby="offcanvasTopLabel"
-                    class="offcanvas offcanvas-top"
-                    id="offcanvasTop"
-                    tabindex="-1"
-            >
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasTopLabel">
-                        Offcanvas top
-                    </h5>
-                    <button
-                            aria-label="Close"
-                            class="btn-close"
-                            data-bs-dismiss="offcanvas"
-                            type="button"
-                    ></button>
-                </div>
-                <div class="offcanvas-body">...</div>
             </div>
         </div>
     </div>
 </header>
-
-<div class="container">
+<div >
     <div layout:fragment="content"></div>
 </div>
-
-
-<!-- Add more product cards as needed -->
-<footer>
+<footer style="margin-top: 100px">
     <div class="footer-container">
         <div class="footer-section">
             <h3>Về Chúng Tôi</h3>
@@ -206,7 +118,7 @@
             </div>
         </div>
     </div>
-    <div class="footer-bottom">
+    <div class="footer-bottom " >
         <p>&copy; 2024 Musical. All rights reserved.</p>
     </div>
 </footer>

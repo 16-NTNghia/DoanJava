@@ -6,15 +6,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Product List</title>
+    <title> Product </title>
 </head>
 <body layout:fragment="content">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 mt-2">
             <nav class="navbar navbar-light">
-                <div class="container-fluid">
-                    <h1>My Product List</h1>
-                    <form class="d-flex" th:action="@{/products/list}" method="get">
+                <div class="container-fluid" >
+                    <h1 style="margin-left: 140px"> Sản Phẩm </h1>
+                    <form  style="margin-right:140px" class="d-flex" th:action="@{/products/list}" method="get">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
@@ -54,7 +54,5 @@
             </li>
         </ul>
     </nav>
-
-
 </body>
 </html>

@@ -87,15 +87,8 @@ header {
     padding: 5px 10px;
 }
 
-/* .navigation a:hover {
-  background-color: #555;
-  border-radius: 5px;
-} */
 
-/* .container .poster {
-  width: 100%;
-  height: 930px;
-} */
+
 .line-cut {
     display: block;
     margin: 0 auto;
@@ -184,9 +177,11 @@ footer {
     padding: 10px;
     border-top: 1px solid white;
 }
-
 .card{
     margin: 10px;
+}
+li{
+    list-style: none
 }
 
 li{

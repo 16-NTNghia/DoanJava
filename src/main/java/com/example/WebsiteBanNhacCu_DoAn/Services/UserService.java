@@ -72,5 +72,7 @@ public class UserService implements UserDetailsService {
             userRepository.save(existingUser);
         }
     }
-
+    public  String getusername (Long userid){
+        return userRepository.findById(userid).get().getUsername() ;
+    }
 }
