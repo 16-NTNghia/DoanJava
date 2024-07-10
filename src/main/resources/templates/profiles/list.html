@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Profiles List</title>
+    <!-- Link Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Profiles List</h1>
+    <a th:href="@{/profiles/new}" class="btn btn-primary mb-3">Create New Profile</a>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="firstName" th:name="'profiles[' + ${profile.id} + '].firstName'" th:value="${profile.firstName}">
+                </div>
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="lastName" th:name="'profiles[' + ${profile.id} + '].lastName'" th:value="${profile.lastName}">
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="text" class="form-control" id="phone" th:name="'profiles[' + ${profile.id} + '].phone'" th:value="${profile.phone}">
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address" th:name="'profiles[' + ${profile.id} + '].address'" th:value="${profile.address}">
+                </div>
+                <div class="mb-3">
+                    <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                    <input type="date" class="form-control" id="dateOfBirth" th:name="'profiles[' + ${profile.id} + '].dateOfBirth'" th:value="${profile.dateOfBirth}">
+                </div>
+                <div class="mb-3">
+                    <label for="photo" class="form-label">Photo</label>
+                    <input type="file" class="form-control" id="photo" th:name="'profiles[' + ${profile.id} + '].photoFile'">
+                </div>
+                <div class="mb-3">
+                    <img th:src="@{${'/uploads/' + profile.photo}}" class="img-thumbnail" alt="Profile Photo" width="100" height="100">
+                </div>
+                <div class="d-flex justify-content-between">
+                    <a th:href="@{/profiles/edit/{id}(id=${profile.id})}" class="btn btn-warning">Edit</a>
+                    <a th:href="@{/profiles/delete/{id}(id=${profile.id})}" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+
+
+</div>
+<!-- Link Bootstrap JS and Popper.js -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
