@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}"  lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout</title>
+</head>
+<body layout:fragment="content">
+<!--<th:block th:replace="~{layout::header}"></th:block>-->
+<!--<h2>Checkout</h2>-->
+
+<!--    <table class="table">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th>Product</th>-->
+<!--            <th>Quantity</th>-->
+<!--            <th>Price</th>-->
+<!--            <th>Total</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        <tr th:each="cartItem : ${cartItems}">-->
+<!--            <td th:text="${cartItem.product.name}"></td>-->
+<!--            <td th:text="${cartItem.quantity}"></td>-->
+<!--            <td th:text="${cartItem.product.price}"></td>-->
+<!--            <td th:text="${cartItem.product.price * cartItem.quantity}"></td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--       &lt;!&ndash; <tfoot>-->
+<!--        <tr>-->
+<!--            <td colspan="3">Total</td>-->
+<!--            <td th:text="${total}"></td>-->
+<!--        </tr>-->
+<!--        </tfoot>&ndash;&gt;-->
+
+<!--    </table>-->
+
+    <form th:action="@{'/orders/xacnhan' + ${#authentication.name}}" method="post">
+<!--        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
+        <div class="mb-3">
+            <label for="customerAddress" class="form-label">Your Address:</label>
+            <input type="text" id="customerAddress" name="Address" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Xác Nhận Thanh Toán</button>
+    </form>
+
+<!--<div th:if="${not cartItems}">
+    <p>Your cart is empty</p>
+</div>-->
+<!--<th:block th:replace="~{layout::footer}"></th:block>-->
+</body>
+</html>

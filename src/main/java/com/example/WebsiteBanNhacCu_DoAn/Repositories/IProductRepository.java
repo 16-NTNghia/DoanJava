@@ -31,13 +31,9 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
 //             OR b.author LIKE %?1%
 //             OR b.category.name LIKE %?1%
 //             """)
-//    List<Product> searchProduct(String keyword);
-//
-//    @Query("""
-//             SELECT b FROM Product b
-//             WHERE b.category.name LIKE %?1%
-//             """)
-//    List<Product> searchProductByCategory(String keyword);
+
+    @Query(" SELECT b FROM Product b WHERE b.name LIKE %?1% ")
+    Page<Product> searchProduct(String keyword, Pageable pageable);
 //    List<Product> findByNameContainingIgnoreCase(String title);
 
     @Query("SELECT p FROM Product p WHERE p.isDelete = false")

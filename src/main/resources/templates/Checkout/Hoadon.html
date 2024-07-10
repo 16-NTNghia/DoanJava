@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+</head>
+<body layout:fragment="content">
+<h2>Invoice</h2>
+<div>
+    <p><strong>Invoice ID:</strong> <span th:text="${invoice.id}"></span></p>
+    <p><strong>Date:</strong> <span th:text="${invoice.invoiceDate}"></span></p>
+    <p><strong>Address:</strong> <span th:text="${invoice.customerAddress}"></span></p>
+    <p><strong>Total:</strong> <span th:text="${invoice.price}"></span></p>
+    <h3>Items</h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="itemInvoice : ${itemInvoices}">
+            <td th:text="${itemInvoice.product.name}"></td>
+            <td th:text="${itemInvoice.quantity}"></td>
+            <td th:text="${itemInvoice.product.price}"></td>
+            <td th:text="${itemInvoice.product.price * itemInvoice.quantity}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

@@ -17,6 +17,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @Controller
 @RequestMapping("/products")
 @RequiredArgsConstructor
@@ -24,18 +27,25 @@ public class ProductController {
     private final ProductService productService;
     private final CategoryService categoryService;
     private final CartService cartService;
-    @GetMapping("")
+    @GetMapping("/admin")
     public String showAllProducts(Model model) {
         model.addAttribute("categories",
                 categoryService.getCategories());
         return "product/index";
     }
     @GetMapping("/list")
-    public String listProductForm(@NotNull Model model,
-                                  @RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "9", required = false) int size) {
+    public String listProducts(@NotNull Model model,
+                               @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "9", required = false) int size,
+                               @RequestParam(name = "search", required = false) String search) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Product> productsPage = productService.getAllProducts(pageable);
+        Page<Product> productsPage;
+        if (search != null && !search.isEmpty()) {
+            productsPage = productService.searchProduct(search, pageable);
+            model.addAttribute("search", search);  // add search to model
+        } else {
+            productsPage = productService.getAllProducts(pageable);
+        }
         model.addAttribute("products", productsPage);
         return "product/list";
     }
@@ -67,17 +77,21 @@ public class ProductController {
         productService.updateProduct(product);
         return "redirect:/products";
     }
-//    @GetMapping("/search")
-//    public String searchProduct(
-//            @NotNull Model model,
-//            @RequestParam String keyword) {
-////        model.addAttribute("products", productService.searchProduct(keyword));
-//        model.addAttribute("totalPages",
-//                productService
-//                        .getProducts());
-//        model.addAttribute("categories",
-//                categoryService.getCategories());
-//        return "product/list";
-//    }
+
+    @GetMapping("/search")
+    public String searchProduct(@RequestParam(name = "search",required = false)String search,
+                                @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "9", required = false) int size,
+                                Model model){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> listProduct ;
+        if ((search == null || search.isEmpty())) {
+            listProduct = productService.getAllProducts(pageable);
+        } else {
+            listProduct = productService.searchProduct(search,pageable);
+        }
+        model.addAttribute("products", listProduct);
+        return "product/list";
+    }
 }
 

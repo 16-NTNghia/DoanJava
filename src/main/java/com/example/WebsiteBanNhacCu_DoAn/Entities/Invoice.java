@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
 import org.hibernate.Hibernate;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,10 +24,12 @@ public class Invoice {
     @Column(name = "id")
     private Long id;
     @Column(name = "invoice_date")
-    private Date invoiceDate = new Date();
+    private LocalDate invoiceDate;
     @Column(name = "total")
     @Positive(message = "Total must be positive")
     private Double price;
+    @Column(name = "Address")
+    private String customerAddress;
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<ItemInvoice> itemInvoices = new ArrayList<>();

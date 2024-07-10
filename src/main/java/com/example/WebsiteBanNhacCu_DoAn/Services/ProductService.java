@@ -21,6 +21,7 @@ import java.util.Optional;
 public class ProductService {
     @Autowired
     private IProductRepository productRepository;
+
     @Autowired
     private ICategoryRepository categoryRepository;
 
@@ -66,6 +67,10 @@ public class ProductService {
 
     public List<Product> getProductsByCategoryId(Long categoryId) {
         return productRepository.findByCategoryIdAndIsDeleteFalse(categoryId);
+    }
+
+    public Page<Product> searchProduct(String keyword, Pageable pageable) {
+        return productRepository.searchProduct(keyword, pageable);
     }
 }
 
