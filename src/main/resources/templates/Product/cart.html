@@ -22,7 +22,12 @@
         <tr >
             <td th:text="${item.product.name}"></td>
             <td>
-                <input type="number" name="quantities" th:value="${item.quantity}" min="1" class="form-control d-inline-block" style="width: 70px;">
+                <div class="input-group">
+                    <a th:href="@{/cart/decrease/{productId}(productId=${item.product.id})}" class="btn btn-outline-secondary btn-sm">-</a>
+                    <input type="text" class="form-control text-center" th:value="${item.quantity}" readonly>
+                    <a th:href="@{/cart/increase/{productId}(productId=${item.product.id})}" class="btn btn-outline-secondary btn-sm">+</a>
+                </div>
+<!--                <input type="number" name="quantities" th:value="${item.quantity}" min="1" class="form-control d-inline-block" style="width: 70px;">-->
             </td>
             <td th:text="${item.product.price}"></td>
             <td th:text="${item.product.price * item.quantity}"></td>
@@ -40,7 +45,10 @@
             <span th:text="${total}"></span>
         </div>
         <div>
-            
+            <!--<form th:action="@{/checkout/thanhtoan}" method="get">
+                <button class="btn btn-success" type="submit">Thanh Toán</button>
+            </form>-->
+            <a th:href="@{/orders/thanhtoan}" class="btn btn-success">Thanh toán</a>
         </div>
     </div>
 

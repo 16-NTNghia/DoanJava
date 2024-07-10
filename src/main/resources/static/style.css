@@ -188,3 +188,7 @@ footer {
 .card{
     margin: 10px;
 }
+
+li{
+    list-style: none;
+}

@@ -64,6 +64,17 @@ public class CartController {
 //        cartService.saveCart(session);
 //        return "redirect:/cart";
 //    }
+    @GetMapping("/increase/{productId}")
+    public String increaseQuantity(@PathVariable Long productId) {
+        cartService.increaseQuantity(productId);
+        return "redirect:/cart";
+    }
+
+    @GetMapping("/decrease/{productId}")
+    public String decreaseQuantity(@PathVariable Long productId) {
+        cartService.decreaseQuantity(productId);
+        return "redirect:/cart";
+    }
 
 }
 

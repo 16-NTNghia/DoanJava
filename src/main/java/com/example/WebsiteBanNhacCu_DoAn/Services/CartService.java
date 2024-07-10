@@ -48,5 +48,35 @@ public class CartService {
     public void clearCart() {
         cartItems.clear();
     }
+
+    public void updateCartItemQuantity(Long productId, int quantity) {
+        for (Cart item : cartItems) {
+            if (item.getProduct().getId().equals(productId)) {
+                item.setQuantity(quantity);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Product not found in cart: " + productId);
+    }
+    public void increaseQuantity(Long productId) {
+        for (Cart item : cartItems) {
+            if (item.getProduct().getId().equals(productId)) {
+                item.setQuantity(item.getQuantity() + 1);
+                return;
+            }
+        }
+    }
+
+    public void decreaseQuantity(Long productId) {
+        for (Cart item : cartItems) {
+            if (item.getProduct().getId().equals(productId)) {
+                if (item.getQuantity() > 1) {
+                    item.setQuantity(item.getQuantity() - 1);
+                }
+                return;
+            }
+        }
+    }
+
 }
 

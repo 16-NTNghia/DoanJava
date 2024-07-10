@@ -120,9 +120,9 @@
                 </div>
                 <div class="right">
                     <img alt="Cart Icon" th:src="@{/public/-icon-cart.svg}"/>
-                    <button sec:authorize="!isAuthenticated()" href="/login" class="btn btn-info">
+                    <a sec:authorize="!isAuthenticated()" th:href="@{/login}" class="btn btn-info">
                         Đăng Nhập
-                    </button>
+                    </a>
 
                 </div>
             </div>
@@ -168,46 +168,48 @@
 <div class="container">
     <div layout:fragment="content"></div>
 </div>
+
+
 <!-- Add more product cards as needed -->
-<!--<footer>-->
-<!--    <div class="footer-container">-->
-<!--        <div class="footer-section">-->
-<!--            <h3>Về Chúng Tôi</h3>-->
-<!--            <a href="#">Giới Thiệu</a>-->
-<!--            <a href="#">Điều Khoản Sử Dụng</a>-->
-<!--            <a href="#">Chính Sách Bảo Mật</a>-->
-<!--        </div>-->
-<!--        <div class="footer-section">-->
-<!--            <h3>Hỗ Trợ</h3>-->
-<!--            <a href="#">Câu Hỏi Thường Gặp</a>-->
-<!--            <a href="#">Liên Hệ Hỗ Trợ</a>-->
-<!--            <a href="#">Hướng Dẫn Sử Dụng</a>-->
-<!--        </div>-->
-<!--        <div class="footer-section">-->
-<!--            <h3>Theo Dõi Chúng Tôi</h3>-->
-<!--            <div class="social-media-footer d-flex justify-content-center">-->
-<!--                <a href="#"-->
-<!--                ><img-->
-<!--                        alt="Facebook"-->
-<!--                        th:src="@{/public/iconmediasocialfacebookfreevector-1@2x.png}"-->
-<!--                /></a>-->
-<!--                <a href="#"-->
-<!--                ><img-->
-<!--                        alt="Zalo"-->
-<!--                        th:src="@{/public/82532235b1c99e391706a9c6e396aeaa-1@2x.png}"-->
-<!--                /></a>-->
-<!--                <a href="#"-->
-<!--                ><img-->
-<!--                        alt="Instagram"-->
-<!--                        th:src="@{/public/iconmediasocialinstagramfreevector-1@2x.png}"-->
-<!--                /></a>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="footer-bottom">-->
-<!--        <p>&copy; 2024 Musical. All rights reserved.</p>-->
-<!--    </div>-->
-<!--</footer>-->
+<footer>
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>Về Chúng Tôi</h3>
+            <a href="#">Giới Thiệu</a>
+            <a href="#">Điều Khoản Sử Dụng</a>
+            <a href="#">Chính Sách Bảo Mật</a>
+        </div>
+        <div class="footer-section">
+            <h3>Hỗ Trợ</h3>
+            <a href="#">Câu Hỏi Thường Gặp</a>
+            <a href="#">Liên Hệ Hỗ Trợ</a>
+            <a href="#">Hướng Dẫn Sử Dụng</a>
+        </div>
+        <div class="footer-section">
+            <h3>Theo Dõi Chúng Tôi</h3>
+            <div class="social-media-footer d-flex justify-content-center">
+                <a href="#"
+                ><img
+                        alt="Facebook"
+                        th:src="@{/public/iconmediasocialfacebookfreevector-1@2x.png}"
+                /></a>
+                <a href="#"
+                ><img
+                        alt="Zalo"
+                        th:src="@{/public/82532235b1c99e391706a9c6e396aeaa-1@2x.png}"
+                /></a>
+                <a href="#"
+                ><img
+                        alt="Instagram"
+                        th:src="@{/public/iconmediasocialinstagramfreevector-1@2x.png}"
+                /></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024 Musical. All rights reserved.</p>
+    </div>
+</footer>
 <script
         crossorigin="anonymous"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"

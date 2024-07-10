@@ -14,8 +14,8 @@
             <nav class="navbar navbar-light">
                 <div class="container-fluid">
                     <h1>My Product List</h1>
-                    <form class="d-flex" th:action="@{/products/search}" method="get">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
+                    <form class="d-flex" th:action="@{/products/list}" method="get">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>
